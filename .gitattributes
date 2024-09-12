@@ -1,2 +1,6 @@
 *.csv filter=lfs diff=lfs merge=lfs -text
 *.ipynb filter=lfs diff=lfs merge=lfs -text
+<<<<<<< HEAD
+=======
+*.joblib filter=lfs diff=lfs merge=lfs -text
+>>>>>>> febc8d694821cd2cbe391e7e15b470ee1009a4bc
