@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import datetime
-import time
 import joblib
 import os
 
@@ -23,7 +22,7 @@ def show_predictions():
         col1, col2 = st.columns(2)
 
         with col1:
-            st.markdown("<h1 style='color: lightblue;'> 🔮 Prediction Hub</h1>", unsafe_allow_html=True)
+            st.markdown("<h1 style='color: gold;'> 🔮 Prediction Hub</h1>", unsafe_allow_html=True)
         with col2:
             st.selectbox("Select a model", options=["XGBoost", "Random Forest"], key = "selected_model")
 
@@ -78,7 +77,7 @@ def show_predictions():
         history_df["Model_used"] = st.session_state["selected_model"]
         history_df["income_above_limit"] = prediction
         history_df["Probability"] = np.where(pred == 0, np.round(probability[:, 0] * 100, 2), np.round(probability[:, 1] * 100, 2))
-        history_df.to_csv("./data/history.csv", mode="a", header = not os.path.exists("./data/history.csv"), index=False)
+        history_df.to_csv("./data/history.csv", mode = "a", header = not os.path.exists("./data/history.csv"), index = False)
 
         st.session_state["probability"] = probability
         st.session_state["prediction"] = prediction
@@ -243,7 +242,7 @@ def show_predictions():
                     bulk_history_df["income_above_limit"] = bulk_predict
                     bulk_history_df["Probability"] = np.where(bulk_predict == 0, np.round(probability_score[:, 0] * 100, 2), np.round(probability_score[:, 1] * 100, 2))
                     history_file = "./data/uploaded_data_history.csv" if is_uploaded_data else "./data/inbuilt_data_history.csv"
-                    bulk_history_df.to_csv(history_file, mode="w", header=True, index=False)
+                    bulk_history_df.to_csv(history_file, mode = "w", header = True, index = False)
 
                     st.success("Bulk Predictions made successfully.")
                 else:
@@ -275,7 +274,7 @@ def show_predictions():
             prediction = st.session_state["prediction"]
             probability = st.session_state["probability"]
 
-            st.sidebar.info("# Prediction Result")
+            st.sidebar.info("### View Prediction Result Here 👇")
 
             if prediction == "Below limit":
                 st.sidebar.warning(f"### The individual is likely to receive an income below the threshold.\nProbability: {probability[0][1] * 100:.2f}%")

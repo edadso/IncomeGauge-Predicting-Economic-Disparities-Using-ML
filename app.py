@@ -38,10 +38,9 @@ def main():
                 Password: user123
                 """
                 )
-        left, middle, right = st.columns([1, 10, 1])
-        with middle:
-            st.markdown("<h1 style='color: lightblue;'> 🔮 INCOME LEVEL PREDICTION APP</h1>", unsafe_allow_html=True)
-            st.image("assets/app_image2.jpeg", width = 850)
+        # Add image as interface
+        st.image("assets/app_interface_image.png", width = 1000, use_column_width = True)
+
 
     if st.session_state["authentication_status"] is False:
         st.sidebar.error("Password/Username incorrect!! Please try again.")
@@ -58,7 +57,7 @@ def main():
         st.sidebar.title("Navigation")
         st.session_state["page"] = st.sidebar.selectbox("## Please select a page here 👇", options = ["Home Page", "Data Page", "Predict Page", "History Page", "Dashboard Page"])
 
-        # Show the page based on selection
+        # Show a page based on selection
         if st.session_state["page"] == "Home Page":
             show_home_page()
         elif st.session_state["page"] == "Data Page":

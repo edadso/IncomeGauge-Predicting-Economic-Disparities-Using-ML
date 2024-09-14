@@ -1,5 +1,4 @@
 import streamlit as st
-# from streamlit_lottie import st_lottie
 import pandas as pd
 import numpy as np
 import time
@@ -32,7 +31,7 @@ def show_data():
                 - **race**: Race of the individual.
                 - **is_hispanic**: Indicator for Hispanic ethnicity.
                 - **employment_commitment**: Employment status of the individual.
-                - **employment_stat**: Employment status of the individual.
+                - **employment_stat**: Employment status of the individual **(0: Unemployed, 1: Employed, 2: Part-time)**
                 - **wage_per_hour**: Hourly wage of the individual.
                 - **working_week_per_year**: Number of weeks worked per year.
                 - **industry_code**: Code representing the industry of employment.
@@ -143,7 +142,6 @@ def show_data():
                         st.error(f"Error reading this file: {str(e)}")
                         data = None
                     
-                    # Coerce non-numeric entries in numeric columns
                     if data is not None:                  
                     
                         # Clean the columns
@@ -192,9 +190,3 @@ def show_data():
                     
                 else:
                     st.info("Please upload a file to preview the data.")
-
-            
-    # # Load lottie
-    # lottie_animation = func.load_lottie("assets/Animation_data.json")
-    # with st.sidebar:
-    #     st_lottie(lottie_animation, height = 350)

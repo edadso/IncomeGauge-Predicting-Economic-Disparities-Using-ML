@@ -2,9 +2,9 @@ import streamlit as st
 import pandas as pd
 import os
 
-
 def show_history():
     # History of Single predictions
+    @st.cache_data
     def data_history():
         if os.path.exists("data/history.csv"):
             history_df = pd.read_csv("data/history.csv")
@@ -13,6 +13,7 @@ def show_history():
         return history_df
 
     # Predictions history on uploaded data
+    @st.cache_data
     def load_uploaded_data_history():
         if os.path.exists("data/uploaded_data_history.csv"):
             uploaded_data_history_df = pd.read_csv("data/uploaded_data_history.csv")
@@ -21,7 +22,7 @@ def show_history():
         return uploaded_data_history_df
         
 
-    # Function to view prediction history based on user's choice
+    # View prediction history based on user's choice
     def view_prediction_history():
         user_choice = st.sidebar.radio("### Display Prediction History",
                                     options = ["Single Prediction", "Bulk Prediction (For uploaded data)"], key = "user_choice")
