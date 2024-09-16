@@ -132,7 +132,7 @@ The dataset consists of various features that provide detailed information about
     - Bulk predictions replace existing history to facilitate dashboard analysis.
  
 <img src="assets\history_page1.JPG" alt="History Page" width="850"/>
-<img src="assets\history_page1.JPG" alt="History Page" width="850"/>
+<img src="assets\history_page2.JPG" alt="History Page" width="850"/>
 
 [Back to Table of Contents](#table-of-contents)
 
