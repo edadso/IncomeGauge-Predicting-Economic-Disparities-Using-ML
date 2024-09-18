@@ -61,18 +61,11 @@ def show_dashboard():
             # Align heatmap to the centre
             left, middle, right = st.columns([1, 10, 1])
             with middle:
-                # Global Correlation Heatmap (applicable to both dashboards)
-                filter_df = df[["age", "employment_stat", "wage_per_hour", "working_week_per_year", "industry_code", "occupation_code",
-                                "total_employed", "vet_benefit", "gains", "losses", "stocks_status", "mig_year", "importance_of_record", "income_above_limit"]]
-
-                # Dropping NaN values
-                filter_df.dropna(inplace = True)
-
-                # Mapping the target variable for correlation
-                filter_df["income_above_limit"] = filter_df["income_above_limit"].map({"Above limit": 0, "Below limit": 1})
+                # Select only numerical columns from the DataFrame
+                numerical_cols = df.select_dtypes(include = ["number"])
 
                 # Compute the correlation matrix
-                corr = filter_df.corr()
+                corr = numerical_cols.corr()
 
                 # Heatmap Plot using Plotly
                 heatmap_fig = go.Figure(data = go.Heatmap(z = corr.values,
@@ -91,10 +84,47 @@ def show_dashboard():
             # Create 3 columns for layout
             col1, col2 = st.columns(2)
             with col1:
-                # Education vs Income
-                fig5 = px.histogram(df, x = "education", color = "income_above_limit", barmode = "stack",
-                                    title = "Income Distribution by Education", color_discrete_sequence = ["green", "lightgreen"])
-                st.plotly_chart(fig5)
+                    # Calculate proportion of income limit by education
+                    income_limit_proportion_by_education = (
+                        df.groupby(by=["education", "income_above_limit"])
+                        .size().unstack().apply(lambda x: x / x.sum() * 100, axis=1)
+                        .sort_values(by = "Below limit", ascending = True)
+                    )
+                    # Create the plot using Plotly
+                    fig = go.Figure()
+
+                    # Add 'Above limit' trace
+                    fig.add_trace(go.Bar(
+                        x = income_limit_proportion_by_education.index,
+                        y = income_limit_proportion_by_education["Above limit"],
+                        name = "Above limit",
+                        marker = dict(color = "green", line=dict(width=1))
+                        ))
+
+                    # Add 'Below limit' trace
+                    fig.add_trace(go.Bar(
+                        x = income_limit_proportion_by_education.index,
+                        y = income_limit_proportion_by_education["Below limit"],
+                        name = "Below limit",
+                        marker = dict(color = "lightgreen", line = dict(width = 1))
+                        ))
+
+                    # Update layout
+                    fig.update_layout(
+                        title = "Proportion of Income Limit by Education",
+                        xaxis_title = "Education",
+                        yaxis_title = "Proportion (%)",
+                        barmode = "stack",
+                        height = 550,  
+                        width = 800,   
+                        bargap = 0.1, 
+                        bargroupgap = 0.1 
+                    )
+
+                    # Show the plot
+                    st.plotly_chart(fig)
+
+
 
             with col2:
                 # Marital Status vs Income
@@ -154,7 +184,6 @@ def show_dashboard():
                             (df["gender"] == gender) & 
                             (df["tax_status"] == tax_status)]
 
-
             # Check if the filtered DataFrame is empty
             if filtered_df.empty:
                 st.warning("No data available for the selected filters. Please adjust your filters.")
@@ -208,39 +237,99 @@ def show_dashboard():
                 # Split layout into two columns for visualizations -- Row 1
                 left, right = st.columns(2)      
                 with left:
-                    # Create stacked histogram chart
-                    fig = px.histogram(filtered_df, 
-                                    x = "education", 
-                                    color = "income_above_limit", 
-                                    barmode = "stack", 
-                                    labels = {"education": "Education", "count": "Count"},
-                                    color_discrete_sequence = ["blue", "lightblue"],
-                                    height = 450)
+                    # Calculate proportion of income limit by education
+                    income_limit_proportion_by_education = (
+                        filtered_df.groupby(by=["education", "income_above_limit"])
+                        .size().unstack().apply(lambda x: x / x.sum() * 100, axis=1)
+                        .sort_values(by="Below limit", ascending=True)
+                    )
 
-                    # Update layout
-                    fig.update_layout(yaxis_title = "Education", 
-                                    xaxis_title = "Count", 
-                                    title = "Count of Education Levels by Income Above Limit")
-                    # Show the plot
-                    st.plotly_chart(fig)
+                    # Check if "Above limit" column exists in the DataFrame
+                    if "Above limit" in income_limit_proportion_by_education.columns:
+                        # Create the plot using Plotly
+                        fig = go.Figure()
+
+                        # Add 'Above limit' trace
+                        fig.add_trace(go.Bar(
+                            x = income_limit_proportion_by_education.index,
+                            y = income_limit_proportion_by_education["Above limit"],
+                            name = "Above limit",
+                            marker = dict(color = "blue", line = dict(width = 1))
+                            ))
+
+                        # Add 'Below limit' trace
+                        fig.add_trace(go.Bar(
+                            x = income_limit_proportion_by_education.index,
+                            y = income_limit_proportion_by_education["Below limit"],
+                            name = "Below limit",
+                            marker = dict(color = "lightblue", line = dict(width = 1))
+                            ))
+
+                        # Update layout
+                        fig.update_layout(
+                            title = "Proportion of Income Limit by Education",
+                            xaxis_title = "Education",
+                            yaxis_title = "Proportion (%)",
+                            barmode = "stack",
+                            height = 550,  
+                            width = 800,   
+                            bargap = 0.1, 
+                            bargroupgap = 0.1 
+                        )
+
+                        # Show the plot
+                        st.plotly_chart(fig)
+
+                    else:
+                        # Display a message if "Above limit" column is not found
+                        st.warning("The filtered range has no record on Above limit!!")
 
                 with right:
-                    # Create stacked histogram chart
-                    fig = px.histogram(filtered_df, 
-                                    x = "industry_code_main", 
-                                    color = "income_above_limit", 
-                                    barmode = "stack", 
-                                    labels = {"industry_code_main": "Industry", "count": "Count"},
-                                    color_discrete_sequence = ["blue", "lightblue"],
-                                    height = 450)
+                    # Calculate proportion of income limit by education
+                    income_limit_proportion_by_industry = (
+                        filtered_df.groupby(by=["industry_code_main", "income_above_limit"])
+                        .size().unstack().apply(lambda x: x / x.sum() * 100, axis = 1)
+                        .sort_values(by = "Below limit", ascending = True)
+                    )
 
-                    # Update layout
-                    fig.update_layout(yaxis_title = "Industry", 
-                                    xaxis_title = "Count", 
-                                    title = "Count of Industry Codes by Income Above Limit")
- 
-                    # Show the plot
-                    st.plotly_chart(fig)
+                    # Check if "Above limit" column exists in the DataFrame
+                    if "Above limit" in income_limit_proportion_by_industry.columns:
+                        # Create the plot using Plotly
+                        fig = go.Figure()
+
+                        # Add 'Above limit' trace
+                        fig.add_trace(go.Bar(
+                            x = income_limit_proportion_by_industry.index,
+                            y = income_limit_proportion_by_industry["Above limit"],
+                            name = "Above limit",
+                            marker = dict(color = "blue", line = dict(width = 1))
+                            ))
+
+                        # Add 'Below limit' trace
+                        fig.add_trace(go.Bar(
+                            x = income_limit_proportion_by_industry.index,
+                            y = income_limit_proportion_by_industry["Below limit"],
+                            name = "Below limit",
+                            marker = dict(color = "lightblue", line = dict(width = 1))
+                            ))
+
+                        # Update layout
+                        fig.update_layout(
+                            title = "Proportion of Income Limit by Industry",
+                            xaxis_title = "Industry",
+                            yaxis_title = "Proportion (%)",
+                            barmode = "stack",
+                            height = 500,  
+                            width = 850,   
+                            bargap = 0.1, 
+                            bargroupgap = 0.1 
+                        )
+
+                        # Show the plot
+                        st.plotly_chart(fig)
+
+                    else:
+                        st.warning("The filtered range has no record on Above limit!!")
 
 
 
