@@ -1,5 +1,5 @@
 # Income Gauge: Predicting-Economic-Disparities-Using-ML
-This project leverages machine learning to predict income levels as a means to address income inequality by providing a model embeded in a Streamlit framework that predicts whether an individual earns above or below a specified amount.
+This project leverages machine learning to predict income levels by providing a model embeded in a Streamlit framework that predicts whether an individual earns above or below a specified amount.
 
 ## Table of Contents
 - [Business Understanding](#business-understanding)
