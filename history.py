@@ -4,7 +4,6 @@ import os
 
 def show_history():
     # History of Single predictions
-    @st.cache_data
     def data_history():
         if os.path.exists("data/history.csv"):
             history_df = pd.read_csv("data/history.csv")

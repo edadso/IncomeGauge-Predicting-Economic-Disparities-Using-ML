@@ -46,7 +46,7 @@ def show_predictions():
 
     # Function to make a single prediction
     def make_single_prediction(pipeline, encoder):
-        data = [[st.session_state["age"], st.session_state["gender"], st.session_state["education"],
+        data = [[st.session_state["ID"], st.session_state["age"], st.session_state["gender"], st.session_state["education"],
                 st.session_state["marital_status"], st.session_state["race"], st.session_state["is_hispanic"],
                 st.session_state["employment_commitment"], st.session_state["employment_stat"], st.session_state["wage_per_hour"],
                 st.session_state["working_week_per_year"], st.session_state["industry_code"], st.session_state["industry_code_main"],
@@ -56,7 +56,7 @@ def show_predictions():
                 st.session_state["mig_year"], st.session_state["country_of_birth_own"], st.session_state["country_of_birth_father"],
                 st.session_state["country_of_birth_mother"], st.session_state["importance_of_record"]]]
 
-        columns = ["age", "gender", "education", "marital_status", "race", "is_hispanic", "employment_commitment",
+        columns = ["ID", "age", "gender", "education", "marital_status", "race", "is_hispanic", "employment_commitment",
                 "employment_stat", "wage_per_hour", "working_week_per_year", "industry_code", "industry_code_main",
                 "occupation_code", "total_employed", "household_stat", "household_summary", "vet_benefit", "tax_status",
                 "gains", "losses", "stocks_status", "citizenship", "mig_year", "country_of_birth_own", "country_of_birth_father",
@@ -64,7 +64,7 @@ def show_predictions():
 
         df = pd.DataFrame(data, columns=columns)
 
-        probability = pipeline.predict_proba(df)
+        probability = pipeline.predict_proba(df.drop(columns = ["ID"]))
         pred = (probability[:, 1] >= 0.5).astype(int)
         pred = int(pred[0])
         prediction = encoder.inverse_transform([pred])[0]
@@ -72,8 +72,8 @@ def show_predictions():
         # Save the prediction history
         now = datetime.datetime.now()
         history_df = df.copy()
-        history_df.insert(0, "Prediction_Date", now.date())
-        history_df.insert(1, "Prediction_Time", now.strftime("%H:%M"))
+        history_df.insert(1, "Prediction_Date", now.date())
+        history_df.insert(2, "Prediction_Time", now.strftime("%H:%M"))
         history_df["Model_used"] = st.session_state["selected_model"]
         history_df["income_above_limit"] = prediction
         history_df["Probability"] = np.where(pred == 0, np.round(probability[:, 0] * 100, 2), np.round(probability[:, 1] * 100, 2))
@@ -193,7 +193,9 @@ def show_predictions():
 
                 st.number_input("Migration Year", min_value = 94, max_value = 95, key = "mig_year")
 
-                st.number_input("Importance of Record", min_value = 0.00, key = "importance_of_record")               
+                st.number_input("Importance of Record", min_value = 0.00, key = "importance_of_record")
+
+                st.text_input("Individual's ID", key = "ID")               
 
             submit_button = st.form_submit_button("Make Prediction")
 
@@ -203,7 +205,7 @@ def show_predictions():
 
     # Bulk prediction function
     def bulk_prediction(model, df, encoder):
-        prob_score = model.predict_proba(df.drop(columns=["ID"]))
+        prob_score = model.predict_proba(df.drop(columns = ["ID"]))
         bulk_pred = (prob_score[:, 1] >= 0.5).astype(int)
         bulk_prediction = encoder.inverse_transform(bulk_pred)
         return bulk_prediction, prob_score

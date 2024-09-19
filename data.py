@@ -68,6 +68,7 @@ def show_data():
 
         with st.expander("## **Explore the dataset used for testing here**", expanded = False, icon = "👇"):
                 # Load data
+                @st.cache_data
                 def load_data():
                     df = pd.read_csv("data/Test.csv")
                     return df
