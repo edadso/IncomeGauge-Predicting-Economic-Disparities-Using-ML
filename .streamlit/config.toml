@@ -4,6 +4,4 @@ backgroundColor="#010f1c"
 secondaryBackgroundColor="#1a274a"
 textColor="#ded1d1"
 
-[server]
-port = 8501
 

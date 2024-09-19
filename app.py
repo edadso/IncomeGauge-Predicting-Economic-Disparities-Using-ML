@@ -7,7 +7,6 @@ import data, predict, history, dashboard
 # Configure page
 st.set_page_config(page_title="Income Predictor App", page_icon="🔮", layout="wide")
 
-
 def main():
     # Load yaml configuration file
     with open("config.yaml", "r") as config_file:
