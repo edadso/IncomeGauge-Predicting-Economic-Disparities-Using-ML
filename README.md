@@ -183,6 +183,7 @@ Contributions are welcome! Please fork the repository and submit a pull request.
 
 ## Hyperlinks
 - [Render Deployment](https://incomepredictor-predicting-economic-vuqa.onrender.com)
+- [Streamlit Deployment](https://income-predictor-app.streamlit.app)
 
 [Back to Table of Contents](#table-of-contents)
 
