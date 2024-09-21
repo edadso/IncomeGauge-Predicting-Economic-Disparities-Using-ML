@@ -102,23 +102,45 @@ def show_data():
                 
                 # Display data preview
                 st.data_editor(data)
-                    
-                # Display data statistics
-                left, right = st.columns(2)
-                with left:
-                    st.write(f"#### Data Statistics")
-                    st.write(data.describe())
-                    st.write(f"#### Data Shape")
-                    st.write(data.shape)
-                    st.write(f"#### Number of Duplicated Rows")
-                    st.write(data.duplicated().sum())
 
-                with right:            
+                @st.cache_data
+                def describe_data():
+                    return st.write(data.describe()) 
+
+                @st.cache_data
+                def view_data_shape():              
+                    return st.write(data.shape)
+
+                @st.cache_data
+                def view_missing_values():
+                    null_count = data.isnull().sum().rename("Missing Value Counts").reset_index()
+                    null_count.columns = ["Features", "Missing Value Counts"]
+                    return st.write(null_count)
+
+                @st.cache_data
+                def view_unique_values():
+                    unique_count = data.nunique().rename("Unique Counts").reset_index()
+                    unique_count.columns = ["Features", "Unique Counts"]
+                    return st.write(unique_count)
+
+
+                # Button to view data statistics
+                if st.sidebar.button("View Stats"):
+                    st.write(f"#### Data Statistics")
+                    describe_data()
+
+                if st.sidebar.button("View Data Shape"):
+                    st.write(f"#### Data Shape")
+                    view_data_shape()
+
+                if st.sidebar.button("Count Missng values"):
                     st.write(f"#### Missing Values")
-                    st.write(data.isnull().sum())
+                    view_missing_values()
+
+                if st.sidebar.button("View Unique Values"):
                     st.write(f"#### Unique Values")
-                    st.write(data.nunique())
-                    
+                    view_unique_values()
+
 
         with st.expander("**Upload your dataset here**", expanded = False, icon = "👇"):
                 
@@ -173,21 +195,43 @@ def show_data():
 
                     # Option to explore data
                     if st.checkbox("Explore data (Optional)"):
-                        # Display data statistics
-                        left, right = st.columns(2)
-                        with left:
-                            st.write(f"#### Data Statistics")
-                            st.write(data.describe())
-                            st.write(f"#### Data Shape")
-                            st.write(data.shape)
-                            st.write(f"#### Number of Duplicated Rows")
-                            st.write(data.duplicated().sum())
+                        @st.cache_data
+                        def describe_data():
+                            return st.write(data.describe()) 
 
-                        with right:            
+                        @st.cache_data
+                        def view_data_shape():              
+                            return st.write(data.shape)
+
+                        @st.cache_data
+                        def view_missing_values():
+                            null_count = data.isnull().sum().rename("Missing Value Counts").reset_index()
+                            null_count.columns = ["Features", "Missing Value Counts"]
+                            return st.write(null_count)
+
+                        @st.cache_data
+                        def view_unique_values():
+                            unique_count = data.nunique().rename("Unique Counts").reset_index()
+                            unique_count.columns = ["Features", "Unique Counts"]
+                            return st.write(unique_count)
+
+
+                        # Button to view data statistics
+                        if st.sidebar.button("View Stats"):
+                            st.write(f"#### Data Statistics")
+                            describe_data()
+
+                        if st.sidebar.button("View Data Shape"):
+                            st.write(f"#### Data Shape")
+                            view_data_shape()
+
+                        if st.sidebar.button("Count Missng values"):
                             st.write(f"#### Missing Values")
-                            st.write(data.isnull().sum())
+                            view_missing_values()
+
+                        if st.sidebar.button("View Unique Values"):
                             st.write(f"#### Unique Values")
-                            st.write(data.nunique())
-                    
+                            view_unique_values()
+                   
                 else:
                     st.info("Please upload a file to preview the data.")
