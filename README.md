@@ -102,6 +102,7 @@ The dataset consists of various features that provide detailed information about
 - **Key Features:**
     - Hosts data used for app development and testing **(Data can be downloaded and used to test the app).**
     - Allows users to upload their own data for analysis.
+    - Allows users to chunk data based on selected size and explore
     - Provides comprehensive information about the data.
     - Ensures seamless integration of uploaded data into the prediction process on the Predict Page.
 
