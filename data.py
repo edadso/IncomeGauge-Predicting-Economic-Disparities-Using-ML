@@ -109,7 +109,7 @@ def show_data():
 
             st.sidebar.info("**Explore Test Data Here 👇**")          
             # Define chunk size
-            chunk_size_1 = 10000
+            chunk_size_1 = 5000
             # Allow user select page number to access chunked data
             page_number = st.sidebar.number_input("Select Page", min_value = 0, value = 0, step = 1, key = "page_num_1")
             data_chunk = load_data_in_chunks("data/Test.csv", chunk_size_1, page_number)
