@@ -109,7 +109,7 @@ def show_data():
 
             st.sidebar.info("**Explore Test Data Here 👇**")          
             # Define chunk size
-            chunk_size_1 = 20000
+            chunk_size_1 = 10000
             # Allow user select page number to access chunked data
             page_number = st.sidebar.number_input("Select Page", min_value = 0, value = 0, step = 1, key = "page_num_1")
             data_chunk = load_data_in_chunks("data/Test.csv", chunk_size_1, page_number)
@@ -156,7 +156,7 @@ def show_data():
                         if file_size > 10:
                             st.warning("Large file detected! Loading in chunks.")
                             # Allow the user to choose the chunk size
-                            chunk_size = st.sidebar.slider("Choose chunk size (rows per chunk)", 1000, 25000, 20000, key = "chunk_size_2")
+                            chunk_size = st.sidebar.slider("Choose chunk size (rows per chunk)", 1000, 10000, 5000, key = "chunk_size_2")
                             page_number = st.sidebar.number_input("Select Page", min_value = 0, value = 0, step = 1, key = "page_num_2")
                             data_chunk = load_data_in_chunks(upload_file, chunk_size, page_number)
 
@@ -177,7 +177,7 @@ def show_data():
                         if file_size > 10:
                             st.warning("Large file detected! Loading in chunks.")
                             # Allow the user to choose the chunk size
-                            chunk_size = st.sidebar.slider("Choose chunk size (rows per chunk)", 1000, 25000, 20000, key = "chunk_size_3")
+                            chunk_size = st.sidebar.slider("Choose chunk size (rows per chunk)", 1000, 10000, 5000, key = "chunk_size_3")
                             page_number = st.sidebar.number_input("Select Page", min_value = 0, value = 0, step = 1, key = "page_num_3")
                             data_chunk = load_xlsx_in_chunks(upload_file, chunk_size, page_number)
 
